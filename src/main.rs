@@ -88,7 +88,7 @@ fn calc_chua(pos: Vec3, c: Vec<f32>) -> Vec3 {
     let m0 = c[3];
     let m1 = c[4];
 
-    let fx = (m1 * px + (m0 - m1)) / (2.0 * ((px + 1.0).abs() - (px - 1.0).abs()));
+    let fx = (m1 * px + (m0 - m1)) / 2.0 * ((px + 1.0).abs() - (px - 1.0).abs());
 
     let x = c1 * (py - px - fx);
     let y = c2 * (px - py + pz);
