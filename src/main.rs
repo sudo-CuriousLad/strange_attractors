@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::{ops::{Mul, Add, Sub}, vec};
 
 use bevy::{core_pipeline::bloom::BloomSettings, prelude::*};
 
@@ -37,11 +37,13 @@ fn init_particle(
             ..default()
         },
         Particle {
-            consts: Vec3 {
-                x: 10.0,
-                y: 28.0,
-                z: 2.666666666666666667,
-            },
+            consts: vec![
+                15.6,
+                1.0,
+                28.0,
+                -1.143,
+                -0.714
+            ],
         },
     ));
     // camera
@@ -71,7 +73,7 @@ fn init_particle(
 
 #[derive(Component)]
 struct Particle {
-    consts: Vec3,
+    consts: Vec<f32>,
 }
 
 #[derive(Component)]
@@ -79,10 +81,12 @@ struct TrailParticle {
     lifetime: f32,
 }
 
-fn calc_lorenz(pos: Vec3, consts: Vec3) -> Vec3 {
-    let x = consts[0] * (pos[1] - pos[0]);
-    let y = (pos[0] * (consts[1] - pos[2])) - pos[1];
-    let z = (pos[0] * pos[1]) - (consts[2] * pos[2]);
+fn calc_chua(pos: Vec3, c: Vec<f32>) -> Vec3 {
+    let fx: f32 = (c[4]*pos[0]+(c[3] - c[4]))/2.0*(pos[0].add(1.0).abs() - pos[0].sub(1.0).abs());
+
+    let x = c[0] * (pos[1] - pos[0]);
+    let y = (pos[0] * (c[1] - pos[2])) - pos[1];
+    let z = (pos[0] * pos[1]) - (c[2] * pos[2]);
 
     return Vec3 { x: x, y: y, z: z };
 }
@@ -90,8 +94,9 @@ fn calc_lorenz(pos: Vec3, consts: Vec3) -> Vec3 {
 fn tick(mut particles: Query<(&mut Transform, &mut Particle)>) {
     for (mut transform, particle) in &mut particles {
         let pos = transform.translation;
+        let consts = &particle.consts;
 
-        transform.translation += calc_lorenz(pos, particle.consts) * 0.01;
+        transform.translation += calc_chua(pos, consts.to_vec()) * 0.01;
     }
 }
 
