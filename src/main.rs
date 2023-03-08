@@ -84,9 +84,9 @@ struct TrailParticle {
 fn calc_chua(pos: Vec3, c: Vec<f32>) -> Vec3 {
     let fx: f32 = (c[4]*pos[0]+(c[3] - c[4]))/2.0*(pos[0].add(1.0).abs() - pos[0].sub(1.0).abs());
 
-    let x = c[0] * (pos[1] - pos[0]);
-    let y = (pos[0] * (c[1] - pos[2])) - pos[1];
-    let z = (pos[0] * pos[1]) - (c[2] * pos[2]);
+    let x = c[0] * (pos[1] - pos[0] - fx);
+    let y = c[1]*(pos[0]-pos[1]+pos[2]);
+    let z = -c[2]*pos[1];
 
     return Vec3 { x: x, y: y, z: z };
 }
