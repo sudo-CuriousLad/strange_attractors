@@ -1,6 +1,6 @@
 use std::ops::Mul;
 
-use bevy::{asset::Asset, core_pipeline::bloom::BloomSettings, prelude::*, math};
+use bevy::{core_pipeline::bloom::BloomSettings, prelude::*};
 
 fn main() {
     App::new()
@@ -80,12 +80,11 @@ struct TrailParticle {
 }
 
 fn calc_lorenz(pos: Vec3, consts: Vec3) -> Vec3 {
-    // let x = consts[0] * (pos[1] - pos[0]);
-    // let y = (pos[0] * (consts[1] - pos[2])) - pos[1];
-    // let z = (pos[0] * pos[1]) - (consts[2] * pos[2]);
+    let x = consts[0] * (pos[1] - pos[0]);
+    let y = (pos[0] * (consts[1] - pos[2])) - pos[1];
+    let z = (pos[0] * pos[1]) - (consts[2] * pos[2]);
 
-    // return Vec3 { x: x, y: y, z: z };
-    return Vec3 { x: 0.0, y: 0.0, z: 0.0 }
+    return Vec3 { x: x, y: y, z: z };
 }
 
 fn tick(mut particles: Query<(&mut Transform, &mut Particle)>) {
